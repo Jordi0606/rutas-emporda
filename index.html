@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rutas Empordà</title>
+<meta name="theme-color" content="#eef1ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121c22" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rutas Empordà">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Overpass+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <h1>Rutas Empordà</h1>
+      <button id="originBtn" class="origin" type="button" aria-label="Cambiar origen">
+        <span class="origin-k">Desde</span>
+        <span id="originLabel" class="origin-v">Pals</span>
+        <span id="originMeta" class="origin-m">datos del PDF</span>
+      </button>
+    </div>
+    <button id="menuBtn" class="iconbtn" type="button" aria-label="Abrir menú" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="home" class="wrap">
+  <section id="today" class="today" aria-label="Hoy"></section>
+
+  <section class="controls" aria-label="Filtros">
+    <div class="seg" role="radiogroup" aria-label="Comarca">
+      <button type="button" class="on" data-zona="">Todas</button>
+      <button type="button" data-zona="Baix Empordà">Baix</button>
+      <button type="button" data-zona="Alt Empordà">Alt</button>
+    </div>
+    <div class="row2">
+      <input id="q" type="search" placeholder="Buscar pueblo, castillo, cala…" autocomplete="off">
+      <select id="sort" aria-label="Ordenar">
+        <option value="n">Nº de ruta</option>
+        <option value="km">Menos km</option>
+        <option value="min">Menos tiempo</option>
+        <option value="pend">Pendientes primero</option>
+      </select>
+    </div>
+  </section>
+
+  <p id="summary" class="summary"></p>
+  <ol id="list" class="list"></ol>
+  <p class="foot">Datos de la guía provisional (2 nov 2026). Mercados, ferias y horarios: confirmar antes de salir. Julio y agosto quedan fuera del plan.</p>
+</main>
+
+<section id="detail" class="detail" hidden aria-live="polite"></section>
+
+<div id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-card">
+    <div class="sheet-head">
+      <h2 id="sheetTitle">Menú</h2>
+      <button class="iconbtn" type="button" data-close aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="blk">
+      <h3>Punto de partida</h3>
+      <div class="btns">
+        <button id="gpsBtn" class="btn primary" type="button">Usar mi ubicación</button>
+        <button id="palsBtn" class="btn" type="button">Volver a Pals (PDF)</button>
+      </div>
+      <form id="addrForm" class="addr">
+        <label for="addr">O escribe un lugar</label>
+        <div class="row2">
+          <input id="addr" type="text" placeholder="Ej.: Girona, Hotel en Begur, Figueres…" autocomplete="off" maxlength="120">
+          <button class="btn" type="submit">Usar</button>
+        </div>
+      </form>
+      <p class="hint">Al cambiar el origen se recalculan km y minutos de las 31 rutas con Google (ida y vuelta, sin tráfico en tiempo real).</p>
+    </div>
+
+    <div class="blk">
+      <h3>Recalcular</h3>
+      <button id="recalcBtn" class="btn" type="button">Recalcular desde el origen actual</button>
+      <div id="progress" class="progress" hidden><div class="bar"><i></i></div><span></span></div>
+      <p id="sheetMsg" class="msg" role="status"></p>
+    </div>
+
+    <div class="blk">
+      <h3>Clave de Google</h3>
+      <form id="keyForm">
+        <label for="key">Se guarda solo en este móvil</label>
+        <div class="row2">
+          <input id="key" type="password" placeholder="AIza…" autocomplete="off" spellcheck="false">
+          <button class="btn" type="submit">Guardar</button>
+        </div>
+      </form>
+      <p id="keyState" class="hint"></p>
+    </div>
+
+    <div class="blk">
+      <h3>Mis notas</h3>
+      <div class="btns">
+        <button id="copyNotes" class="btn" type="button">Copiar todas las notas</button>
+      </div>
+      <p class="hint">Las notas y las rutas marcadas como hechas se guardan en este móvil. Si borras los datos del navegador se pierden: cópialas de vez en cuando.</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
